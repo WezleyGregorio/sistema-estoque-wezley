@@ -1,0 +1,201 @@
+/* Reset e Variáveis Globais - O tema Cyberpunk */
+:root {
+    --bg-dark: #0a0a0f; /* Fundo super escuro */
+    --bg-card: #13131a; /* Fundo dos cartões/menu */
+    --text-primary: #e0e0e0;
+    --text-secondary: #888899;
+    --neon-blue: #00d2ff; /* Ciano Neon */
+    --neon-purple: #9d00ff; /* Roxo Neon */
+    --neon-pink: #ff0055; /* Rosa Neon */
+    --neon-green: #00ff88; /* Verde Neon */
+    --sidebar-width: 250px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+a { text-decoration: none; }
+
+/* --- SIDEBAR (Menu Lateral) --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--bg-card);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #1f1f2e;
+    box-shadow: 2px 0 15px rgba(0, 210, 255, 0.05);
+}
+
+.brand {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
+    display: flex; align-items: center; gap: 10px;
+}
+
+.menu-item {
+    padding: 15px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: 0.3s;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 500;
+}
+
+.menu-item:hover, .menu-item.active {
+    background: linear-gradient(90deg, rgba(0,210,255,0.1), transparent);
+    color: var(--neon-blue);
+    border-left: 3px solid var(--neon-blue);
+}
+
+.user-info {
+    margin-top: auto; /* Empurra para baixo */
+    padding-top: 20px;
+    border-top: 1px solid #1f1f2e;
+    display: flex; align-items: center; justify-content: space-between;
+}
+
+.btn-logout {
+    color: var(--neon-pink);
+    padding: 8px 12px;
+    border: 1px solid var(--neon-pink);
+    border-radius: 6px;
+    font-size: 0.8em;
+    transition: 0.3s;
+}
+.btn-logout:hover { background: var(--neon-pink); color: white; }
+
+/* --- ÁREA PRINCIPAL DE CONTEÚDO --- */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto; /* Permite rolar se o conteúdo for grande */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 2em;
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px rgba(0,210,255,0.3);
+    margin: 0;
+}
+
+/* --- DASHBOARD CARDS --- */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: linear-gradient(145deg, #1e1e28, #14141a);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border: 1px solid #252530;
+    position: relative;
+    overflow: hidden;
+}
+/* Efeito de borda neon brilhante */
+.card::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+}
+.card.blue::before { background: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
+.card.purple::before { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
+.card.green::before { background: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+
+.card-title { font-size: 0.9em; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
+.card-value { font-size: 2.5em; font-weight: bold; margin: 0;}
+
+/* --- TABELAS (Estoque/Vendas) --- */
+.table-container {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #252530;
+    margin-top: 30px;
+}
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; color: var(--text-secondary); padding: 15px; border-bottom: 1px solid #252530; }
+td { padding: 15px; border-bottom: 1px solid #1f1f2e; color: var(--text-primary); vertical-align: middle;}
+.stock-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: bold; }
+.in-stock { background: rgba(0,255,136,0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
+.out-stock { background: rgba(255,0,85,0.1); color: var(--neon-pink); border: 1px solid var(--neon-pink); }
+
+/* --- BOTÕES GERAIS --- */
+.btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; color: white;}
+.btn-primary { background: var(--neon-blue); color: #0a0a0f; box-shadow: 0 0 15px rgba(0,210,255,0.2); }
+.btn-primary:hover { box-shadow: 0 0 25px rgba(0,210,255,0.4); }
+.btn-danger { background: rgba(255,0,85,0.1); color: var(--neon-pink); border: 1px solid var(--neon-pink); padding: 8px;}
+.btn-edit { background: rgba(255,204,0,0.1); color: #ffcc00; border: 1px solid #ffcc00; padding: 8px; margin-right: 5px;}
+
+/* --- FORMULÁRIOS (Login e Cadastros) --- */
+.form-control {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: #0f0f13;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 8px;
+    box-sizing: border-box; /* Importante para padding não estourar */
+}
+.form-control:focus { outline: none; border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0,210,255,0.2); }
+
+/* --- TELA DE LOGIN --- */
+.login-container {
+    display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0f 100%);
+}
+.login-box {
+    background: var(--bg-card); padding: 40px; border-radius: 20px; text-align: center;
+    width: 100%; max-width: 400px; border: 1px solid var(--neon-blue);
+    box-shadow: 0 0 30px rgba(0,210,255,0.15);
+}
+
+/* --- CAIXA (PDV) LAYOUT --- */
+.pos-container { display: flex; gap: 20px; height: calc(100vh - 150px); }
+.pos-left { flex: 2; display: flex; flex-direction: column; gap: 20px; }
+.pos-right { flex: 1; }
+.product-search-box { background: var(--bg-card); padding: 20px; border-radius: 15px; }
+.cart-box {
+    background: var(--bg-card); padding: 25px; border-radius: 15px; border: 1px solid #252530;
+    height: 100%; display: flex; flex-direction: column;
+}
+.cart-total { font-size: 2.5em; color: var(--neon-green); font-weight: bold; margin: 20px 0; text-align: right;}
+.payment-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.payment-radio-label {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #1a1a20; padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid #333;
+}
+.payment-radio-label:hover { border-color: var(--neon-blue); }
+input[type="radio"]:checked + .payment-radio-label {
+    background: rgba(0,210,255,0.1); border-color: var(--neon-blue); color: var(--neon-blue);
+}
+
+/* Mensagens Flash */
+.flash-messages { margin-bottom: 20px; }
+.flash-msg { padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 10px; }
+.flash-sucesso { background: rgba(0,255,136,0.2); color: var(--neon-green); border: 1px solid var(--neon-green); }
+.flash-erro { background: rgba(255,0,85,0.2); color: var(--neon-pink); border: 1px solid var(--neon-pink); }
+.flash-aviso { background: rgba(255,204,0,0.2); color: #ffcc00; border: 1px solid #ffcc00; }

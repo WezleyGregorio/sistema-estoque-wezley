@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="header">
+    <h1 class="page-title">Gerenciar Estoque</h1>
+</div>
+
+<div style="background: var(--bg-card); padding: 25px; border-radius: 15px; border: 1px solid var(--neon-blue); margin-bottom: 30px;">
+    <h3 style="color: var(--neon-blue); margin-top: 0;">➕ Novo Produto</h3>
+    <form method="POST" action="{{ url_for('index') }}" style="display: flex; gap: 10px; align-items: end;">
+        <div style="flex: 2;">
+            <label style="color: var(--text-secondary); font-size: 0.9em;">Nome do Produto</label>
+            <input type="text" name="nome" class="form-control" placeholder="Ex: Sapato Social..." required style="margin: 5px 0 0 0;">
+        </div>
+        <div style="flex: 1;">
+             <label style="color: var(--text-secondary); font-size: 0.9em;">Preço (R$)</label>
+            <input type="number" step="0.01" name="preco" class="form-control" placeholder="0.00" required style="margin: 5px 0 0 0;">
+        </div>
+        <div style="flex: 1;">
+             <label style="color: var(--text-secondary); font-size: 0.9em;">Quantidade</label>
+            <input type="number" name="quantidade" class="form-control" placeholder="Qtd" required style="margin: 5px 0 0 0;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="height: 42px;">Cadastrar</button>
+    </form>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Produto</th>
+                <th>Preço Unit.</th>
+                <th>Status do Estoque</th>
+                <th style="text-align: right;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in produtos %}
+            <tr>
+                <td>#{{ p[0] }}</td>
+                <td><strong>{{ p[1] }}</strong></td>
+                <td>R$ {{ "%.2f"|format(p[2]) }}</td>
+                <td>
+                    {% if p[3] > 0 %}
+                        <span class="stock-badge in-stock">{{ p[3] }} unidades</span>
+                    {% else %}
+                        <span class="stock-badge out-stock">ESGOTADO</span>
+                    {% endif %}
+                </td>
+                <td style="text-align: right;">
+                    <a href="/vender_estoque/{{ p[0] }}" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8em; margin-right: 5px;">💲 Vender 1</a>
+                     <a href="{{ url_for('excluir', id_produto=p[0]) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir {{ p[1] }}?')" style="padding: 6px 10px;">
+                        <i class="ri-delete-bin-line"></i>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-secondary);">Nenhum produto cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

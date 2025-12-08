@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - La Persona</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div style="font-size: 3em; color: var(--neon-blue); margin-bottom: 20px;">
+                 👠</div>
+            <h2 style="color: var(--neon-blue); margin-bottom: 30px;">Acesso ao Sistema</h2>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-msg flash-{{ category }}" style="margin-bottom: 20px;">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <input type="password" name="senha" class="form-control" placeholder="Digite sua senha de acesso" required style="text-align: center; font-size: 1.1em;">
+                <br>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 20px; font-size: 1.1em;">ENTRAR NO SISTEMA</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

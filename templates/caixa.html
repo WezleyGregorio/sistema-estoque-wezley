@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="header">
+    <h1 class="page-title">Ponto de Venda (PDV)</h1>
+</div>
+
+<div class="pos-container">
+    <div class="pos-left">
+        <div class="product-search-box">
+            <h3 style="margin-top: 0;">Buscar Produto</h3>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" class="form-control" placeholder="Digite o nome ou código do produto..." style="margin: 0;">
+                <button class="btn btn-primary"><i class="ri-search-line"></i> Buscar</button>
+            </div>
+        </div>
+
+        <div class="table-container" style="margin-top: 0; flex: 1; overflow-y: auto;">
+            <table style="margin-top: 0;">
+                <thead><tr><th>Produto</th><th>Preço</th><th>Ação</th></tr></thead>
+                <tbody>
+                    {% for p in produtos %}
+                    {% if p[3] > 0 %}
+                    <tr>
+                        <td><strong>{{ p[1] }}</strong></td>
+                        <td>R$ {{ "%.2f"|format(p[2]) }}</td>
+                        <td><button class="btn btn-primary" style="padding: 5px 15px; font-size: 0.9em;">+ Adicionar</button></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="pos-right">
+        <div class="cart-box">
+            <h2 style="margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px;">🛒 Carrinho</h2>
+            
+            <div style="flex: 1; color: var(--text-secondary); text-align: center; padding: 20px;">
+                (Itens adicionados aparecerão aqui)
+            </div>
+
+            <div style="border-top: 1px solid #333; padding-top: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 1.2em;">TOTAL A PAGAR:</span>
+                </div>
+                <div class="cart-total">R$ 0,00</div>
+            </div>
+
+            <h4 style="margin-bottom: 15px;">Forma de Pagamento</h4>
+            <div class="payment-options">
+                <label class="payment-radio-label">
+                    <span>💵 Dinheiro</span>
+                    <input type="radio" name="pagamento" checked>
+                </label>
+                <label class="payment-radio-label">
+                    <span>💳 Cartão de Débito</span>
+                    <input type="radio" name="pagamento">
+                </label>
+                <label class="payment-radio-label">
+                    <span>💳 Cartão de Crédito</span>
+                    <input type="radio" name="pagamento">
+                </label>
+                <label class="payment-radio-label">
+                    <span>💠 PIX</span>
+                    <input type="radio" name="pagamento">
+                </label>
+            </div>
+
+            <input type="text" class="form-control" placeholder="CPF do Cliente (Opcional)">
+            
+            <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 15px; font-size: 1.2em; margin-top: 20px; background: var(--neon-green); color: black; box-shadow: none;">
+                ✅ Finalizar Venda
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

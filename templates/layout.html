@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema La Persona - Cyberpunk Edition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <i class="ri-shopping-bag-3-fill"></i> La Persona
+        </div>
+        <div class="menu">
+            <a href="/" class="menu-item {% if request.path == '/' %}active{% endif %}">
+                <i class="ri-dashboard-line"></i> Dashboard
+            </a>
+            <a href="/caixa" class="menu-item {% if 'caixa' in request.path %}active{% endif %}">
+                <i class="ri-money-dollar-circle-line"></i> Caixa (PDV)
+            </a>
+            <a href="/estoque" class="menu-item {% if 'estoque' in request.path %}active{% endif %}">
+                <i class="ri-box-3-line"></i> Estoque
+            </a>
+        </div>
+        <div class="user-info">
+            <div>
+                <small style="color:var(--text-secondary);">Usuário</small><br>
+                <strong>Administrador</strong>
+            </div>
+            <a href="/logout" class="btn-logout">Sair</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+</html>
