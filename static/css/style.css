@@ -1,14 +1,14 @@
-/* Reset e Variáveis Globais - O tema Cyberpunk */
+/* --- CONFIGURAÇÕES GERAIS --- */
 :root {
-    --bg-dark: #0a0a0f; /* Fundo super escuro */
-    --bg-card: #13131a; /* Fundo dos cartões/menu */
-    --text-primary: #e0e0e0;
-    --text-secondary: #888899;
-    --neon-blue: #00d2ff; /* Ciano Neon */
-    --neon-purple: #9d00ff; /* Roxo Neon */
-    --neon-pink: #ff0055; /* Rosa Neon */
-    --neon-green: #00ff88; /* Verde Neon */
-    --sidebar-width: 250px;
+    --bg-dark: #0a0a0f;
+    --bg-card: #13131a;
+    --text-primary: #ffffff; /* Branco Puro */
+    --text-secondary: #a0a0b0;
+    --neon-blue: #00d2ff;
+    --neon-pink: #ff0055;
+    --neon-green: #00ff88;
+    /* Fonte Elegante igual da Logo */
+    --font-brand: 'Playfair Display', serif;
 }
 
 body {
@@ -18,123 +18,133 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-primary);
     display: flex;
+    flex-direction: column; /* Importante: Layout Vertical (Topo + Conteúdo) */
     height: 100vh;
     overflow: hidden;
 }
 
 a { text-decoration: none; }
 
-/* --- SIDEBAR (Menu Lateral) --- */
-.sidebar {
-    width: var(--sidebar-width);
+/* --- BARRA SUPERIOR (NOVO MENU) --- */
+.topbar {
     background-color: var(--bg-card);
-    padding: 20px;
+    height: 85px;
     display: flex;
-    flex-direction: column;
-    border-right: 1px solid #1f1f2e;
-    box-shadow: 2px 0 15px rgba(0, 210, 255, 0.05);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    border-bottom: 1px solid #1f1f2e;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    z-index: 100;
 }
 
+/* Marca / Logo */
 .brand {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-bottom: 40px;
-    color: var(--neon-blue);
-    text-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
-    display: flex; align-items: center; gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand-icon {
+    font-size: 2.5em; 
+    color: var(--text-primary); /* Branco para ficar igual a logo no fundo escuro */
+    line-height: 0;
+}
+
+.brand-text {
+    font-family: var(--font-brand); /* Fonte Chique */
+    font-size: 1.8em;
+    color: #ffffff;
+    line-height: 0.9;
+}
+
+.brand-text small {
+    display: block;
+    font-family: 'Segoe UI', sans-serif; /* Fonte manuscrita simulada */
+    font-style: italic;
+    font-size: 0.4em;
+    font-weight: 300;
+    color: var(--text-secondary);
+    margin-top: 5px;
+    letter-spacing: 1px;
+}
+
+/* Menu Centralizado */
+.nav-menu {
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px;
+    border-radius: 50px;
+    border: 1px solid #333;
 }
 
 .menu-item {
-    padding: 15px;
-    cursor: pointer;
-    text-decoration: none;
+    padding: 10px 25px;
+    border-radius: 30px;
     color: var(--text-secondary);
-    transition: 0.3s;
-    border-radius: 10px;
-    margin-bottom: 5px;
-    display: flex; align-items: center; gap: 10px;
     font-weight: 500;
+    transition: 0.3s;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.95em;
 }
 
-.menu-item:hover, .menu-item.active {
-    background: linear-gradient(90deg, rgba(0,210,255,0.1), transparent);
-    color: var(--neon-blue);
-    border-left: 3px solid var(--neon-blue);
+.menu-item:hover {
+    color: white;
+    background: rgba(255,255,255,0.1);
 }
 
-.user-info {
-    margin-top: auto; /* Empurra para baixo */
-    padding-top: 20px;
-    border-top: 1px solid #1f1f2e;
-    display: flex; align-items: center; justify-content: space-between;
+.menu-item.active {
+    background: var(--neon-blue);
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(0,210,255,0.4);
 }
+
+/* Área do Usuário */
+.user-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.user-info { text-align: right; font-size: 0.8em; color: #888; }
+.user-info strong { display: block; color: white; font-size: 1.2em; }
 
 .btn-logout {
     color: var(--neon-pink);
-    padding: 8px 12px;
     border: 1px solid var(--neon-pink);
-    border-radius: 6px;
-    font-size: 0.8em;
+    padding: 8px 15px;
+    border-radius: 10px;
     transition: 0.3s;
 }
 .btn-logout:hover { background: var(--neon-pink); color: white; }
 
-/* --- ÁREA PRINCIPAL DE CONTEÚDO --- */
+
+/* --- ÁREA PRINCIPAL --- */
 .main-content {
     flex: 1;
-    padding: 30px;
-    overflow-y: auto; /* Permite rolar se o conteúdo for grande */
+    padding: 40px;
+    overflow-y: auto; /* Barra de rolagem só no conteúdo */
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
+/* --- CARDS E TABELAS (Mantidos) --- */
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.page-title { font-size: 2em; color: var(--neon-blue); margin: 0; font-family: 'Segoe UI', sans-serif; font-weight: bold; }
 
-.page-title {
-    font-size: 2em;
-    color: var(--neon-blue);
-    text-shadow: 0 0 10px rgba(0,210,255,0.3);
-    margin: 0;
-}
-
-/* --- DASHBOARD CARDS --- */
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 25px;
-}
-
-.card {
-    background: linear-gradient(145deg, #1e1e28, #14141a);
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    border: 1px solid #252530;
-    position: relative;
-    overflow: hidden;
-}
-/* Efeito de borda neon brilhante */
-.card::before {
-    content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-}
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; }
+.card { background: linear-gradient(145deg, #1e1e28, #14141a); padding: 25px; border-radius: 15px; border: 1px solid #252530; position: relative; overflow: hidden; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
 .card.blue::before { background: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
 .card.purple::before { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
 .card.green::before { background: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
-
 .card-title { font-size: 0.9em; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
 .card-value { font-size: 2.5em; font-weight: bold; margin: 0;}
 
-/* --- TABELAS (Estoque/Vendas) --- */
-.table-container {
-    background: var(--bg-card);
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid #252530;
-    margin-top: 30px;
-}
+.table-container { background: var(--bg-card); padding: 20px; border-radius: 15px; border: 1px solid #252530; margin-top: 30px; }
 table { width: 100%; border-collapse: collapse; }
 th { text-align: left; color: var(--text-secondary); padding: 15px; border-bottom: 1px solid #252530; }
 td { padding: 15px; border-bottom: 1px solid #1f1f2e; color: var(--text-primary); vertical-align: middle;}
@@ -142,60 +152,28 @@ td { padding: 15px; border-bottom: 1px solid #1f1f2e; color: var(--text-primary)
 .in-stock { background: rgba(0,255,136,0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
 .out-stock { background: rgba(255,0,85,0.1); color: var(--neon-pink); border: 1px solid var(--neon-pink); }
 
-/* --- BOTÕES GERAIS --- */
 .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; color: white;}
 .btn-primary { background: var(--neon-blue); color: #0a0a0f; box-shadow: 0 0 15px rgba(0,210,255,0.2); }
 .btn-primary:hover { box-shadow: 0 0 25px rgba(0,210,255,0.4); }
 .btn-danger { background: rgba(255,0,85,0.1); color: var(--neon-pink); border: 1px solid var(--neon-pink); padding: 8px;}
-.btn-edit { background: rgba(255,204,0,0.1); color: #ffcc00; border: 1px solid #ffcc00; padding: 8px; margin-right: 5px;}
 
-/* --- FORMULÁRIOS (Login e Cadastros) --- */
-.form-control {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    background: #0f0f13;
-    border: 1px solid #333;
-    color: white;
-    border-radius: 8px;
-    box-sizing: border-box; /* Importante para padding não estourar */
-}
-.form-control:focus { outline: none; border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0,210,255,0.2); }
+/* Login e Caixa */
+.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0f 100%); }
+.login-box { background: var(--bg-card); padding: 40px; border-radius: 20px; text-align: center; width: 100%; max-width: 400px; border: 1px solid var(--neon-blue); box-shadow: 0 0 30px rgba(0,210,255,0.15); }
+.form-control { width: 100%; padding: 12px; margin: 10px 0; background: #0f0f13; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
+.form-control:focus { outline: none; border-color: var(--neon-blue); }
 
-/* --- TELA DE LOGIN --- */
-.login-container {
-    display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%;
-    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0f 100%);
-}
-.login-box {
-    background: var(--bg-card); padding: 40px; border-radius: 20px; text-align: center;
-    width: 100%; max-width: 400px; border: 1px solid var(--neon-blue);
-    box-shadow: 0 0 30px rgba(0,210,255,0.15);
-}
-
-/* --- CAIXA (PDV) LAYOUT --- */
 .pos-container { display: flex; gap: 20px; height: calc(100vh - 150px); }
 .pos-left { flex: 2; display: flex; flex-direction: column; gap: 20px; }
 .pos-right { flex: 1; }
 .product-search-box { background: var(--bg-card); padding: 20px; border-radius: 15px; }
-.cart-box {
-    background: var(--bg-card); padding: 25px; border-radius: 15px; border: 1px solid #252530;
-    height: 100%; display: flex; flex-direction: column;
-}
+.cart-box { background: var(--bg-card); padding: 25px; border-radius: 15px; border: 1px solid #252530; height: 100%; display: flex; flex-direction: column; }
 .cart-total { font-size: 2.5em; color: var(--neon-green); font-weight: bold; margin: 20px 0; text-align: right;}
 .payment-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-.payment-radio-label {
-    display: flex; justify-content: space-between; align-items: center;
-    background: #1a1a20; padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid #333;
-}
-.payment-radio-label:hover { border-color: var(--neon-blue); }
-input[type="radio"]:checked + .payment-radio-label {
-    background: rgba(0,210,255,0.1); border-color: var(--neon-blue); color: var(--neon-blue);
-}
+.payment-radio-label { display: flex; justify-content: space-between; align-items: center; background: #1a1a20; padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid #333; }
+input[type="radio"]:checked + .payment-radio-label { background: rgba(0,210,255,0.1); border-color: var(--neon-blue); color: var(--neon-blue); }
 
-/* Mensagens Flash */
 .flash-messages { margin-bottom: 20px; }
 .flash-msg { padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 10px; }
 .flash-sucesso { background: rgba(0,255,136,0.2); color: var(--neon-green); border: 1px solid var(--neon-green); }
 .flash-erro { background: rgba(255,0,85,0.2); color: var(--neon-pink); border: 1px solid var(--neon-pink); }
-.flash-aviso { background: rgba(255,204,0,0.2); color: #ffcc00; border: 1px solid #ffcc00; }

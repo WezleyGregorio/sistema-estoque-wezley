@@ -3,35 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema La Persona - Cyberpunk Edition</title>
+    <title>Sistema La Persona</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="sidebar">
+
+    <header class="topbar">
+        
         <div class="brand">
-    <i class="ri-store-2-fill"></i> {{ session.get('nome_loja', 'Sistema Wezley') }}
-</div>
+            <div class="brand-icon">👠</div> 
+            
+            <div class="brand-text">
+                {{ session.get('nome_loja', 'La Persona').split(' ')[0] }}
+                {{ session.get('nome_loja', 'La Persona').split(' ')[1] if ' ' in session.get('nome_loja', '') else '' }}
+                <small>PER GUTO</small>
+            </div>
         </div>
-        <div class="menu">
+
+        <nav class="nav-menu">
             <a href="/" class="menu-item {% if request.path == '/' %}active{% endif %}">
                 <i class="ri-dashboard-line"></i> Dashboard
             </a>
             <a href="/caixa" class="menu-item {% if 'caixa' in request.path %}active{% endif %}">
-                <i class="ri-money-dollar-circle-line"></i> Caixa (PDV)
+                <i class="ri-money-dollar-circle-line"></i> Caixa
             </a>
             <a href="/estoque" class="menu-item {% if 'estoque' in request.path %}active{% endif %}">
                 <i class="ri-box-3-line"></i> Estoque
             </a>
-        </div>
-        <div class="user-info">
-            <div>
-                <small style="color:var(--text-secondary);">Usuário</small><br>
-                <strong>Administrador</strong>
+        </nav>
+
+        <div class="user-area">
+            <div class="user-info">
+                Usuário<br>
+                <strong>{{ session.get('login_atual', 'Visitante') }}</strong>
             </div>
-            <a href="/logout" class="btn-logout">Sair</a>
+            <a href="/logout" class="btn-logout" title="Sair">
+                <i class="ri-logout-box-r-line"></i>
+            </a>
         </div>
-    </nav>
+    </header>
 
     <main class="main-content">
         {% with messages = get_flashed_messages(with_categories=true) %}
