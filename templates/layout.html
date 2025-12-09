@@ -10,7 +10,8 @@
 <body>
     <nav class="sidebar">
         <div class="brand">
-            <i class="ri-shopping-bag-3-fill"></i> La Persona
+    <i class="ri-store-2-fill"></i> {{ session.get('nome_loja', 'Sistema Wezley') }}
+</div>
         </div>
         <div class="menu">
             <a href="/" class="menu-item {% if request.path == '/' %}active{% endif %}">

@@ -1,22 +1,33 @@
 import sqlite3
 import csv
 import io
-# Importamos 'render_template' para usar os arquivos HTML
+import os
+import sys
 from flask import Flask, request, redirect, flash, get_flashed_messages, session, Response, render_template, url_for
 from datetime import datetime
 
-app = Flask(__name__)
-app.secret_key = 'segredo_la_persona_cyber' # Chave de segurança
-SENHA_SISTEMA = '1234' # SUA SENHA
+# --- CONFIGURAÇÃO DE PASTAS ---
+if getattr(sys, 'frozen', False):
+    pasta_base = os.path.dirname(sys.executable)
+else:
+    pasta_base = os.path.dirname(os.path.abspath(__file__))
 
-# --- Conexão com Banco ---
+app = Flask(__name__, 
+            template_folder=os.path.join(pasta_base, 'templates'),
+            static_folder=os.path.join(pasta_base, 'static'))
+
+app.secret_key = 'segredo_sistema_multi_lojas'
+
+# --- BANCO DE DADOS ---
 def conectar_banco():
-    # No Windows local, o arquivo será criado na mesma pasta
-    return sqlite3.connect('estoque.db')
+    caminho_banco = os.path.join(pasta_base, 'estoque.db')
+    return sqlite3.connect(caminho_banco)
 
 def inicializar_banco():
     conn = conectar_banco()
     cursor = conn.cursor()
+    
+    # 1. Tabela Produtos
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS produtos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,6 +36,8 @@ def inicializar_banco():
             quantidade INTEGER NOT NULL
         )
     ''')
+    
+    # 2. Tabela Vendas
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS vendas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,34 +46,74 @@ def inicializar_banco():
             data_hora DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
+    
+    # 3. NOVA TABELA: USUÁRIOS (Logins das Lojas e Seu)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            login TEXT UNIQUE NOT NULL,
+            senha TEXT NOT NULL,
+            nome_loja TEXT NOT NULL
+        )
+    ''')
+    
+    # --- CRIAÇÃO DOS USUÁRIOS PADRÃO (SE NÃO EXISTIREM) ---
+    cursor.execute("SELECT count(*) FROM usuarios")
+    qtd_users = cursor.fetchone()[0]
+    
+    if qtd_users == 0:
+        print("Criando usuários padrão...")
+        usuarios_iniciais = [
+            # SEU LOGIN MESTRE (ADMIN)
+            ('wezley', 'admin123', 'Sistema Admin Wezley'),
+            # LOGIN DA LOJA LA PERSONA (CLIENTE)
+            ('lapersona', 'guto123', 'La Persona Per Guto'),
+            # EXEMPLO OUTRA LOJA
+            ('congelata', 'marmita123', 'Congelata Gourmet')
+        ]
+        cursor.executemany("INSERT INTO usuarios (login, senha, nome_loja) VALUES (?, ?, ?)", usuarios_iniciais)
+        conn.commit()
+
     conn.commit()
     conn.close()
 
-# --- ROTAS DE ACESSO (Login/Logout) ---
+# --- ROTA DE LOGIN (Agora verifica no Banco de Dados) ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Se já estiver logado, manda pro dashboard
+    # Se já estiver logado, entra direto
     if session.get('usuario_logado'): return redirect('/')
 
     if request.method == 'POST':
-        senha = request.form['senha']
-        if senha == SENHA_SISTEMA:
+        login_digitado = request.form['usuario'] # Pega o usuário digitado
+        senha_digitada = request.form['senha']
+        
+        conn = conectar_banco()
+        cursor = conn.cursor()
+        
+        # Procura no banco se existe esse par de Login + Senha
+        cursor.execute("SELECT login, nome_loja FROM usuarios WHERE login = ? AND senha = ?", (login_digitado, senha_digitada))
+        usuario_encontrado = cursor.fetchone()
+        conn.close()
+        
+        if usuario_encontrado:
+            # Login Sucesso!
             session['usuario_logado'] = True
+            session['login_atual'] = usuario_encontrado[0]
+            session['nome_loja'] = usuario_encontrado[1] # Salva o nome da loja na memória
             return redirect('/')
         else:
-            flash('Senha Incorreta! Acesso Negado.', 'erro')
+            # Login Errado
+            flash('Login ou Senha incorretos!', 'erro')
             return redirect('/login')
             
-    # Agora usamos o arquivo HTML separado!
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
     session.clear()
-    flash('Você saiu do sistema.', 'aviso')
     return redirect('/login')
 
-# --- ROTA PRINCIPAL: DASHBOARD ---
+# --- DASHBOARD (Adapta o nome da loja) ---
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if not session.get('usuario_logado'): return redirect('/login')
@@ -68,7 +121,6 @@ def index():
     conn = conectar_banco()
     cursor = conn.cursor()
 
-    # Se veio um cadastro do formulário rápido
     if request.method == 'POST':
         try:
             nome = request.form['nome']
@@ -76,38 +128,37 @@ def index():
             quantidade = int(request.form['quantidade'])
             cursor.execute("INSERT INTO produtos (nome, preco, quantidade) VALUES (?, ?, ?)", (nome, preco, quantidade))
             conn.commit()
-            flash(f'Produto "{nome}" cadastrado com sucesso!', 'sucesso')
+            flash(f'Produto cadastrado!', 'sucesso')
         except:
-             flash('Erro ao cadastrar. Verifique os dados.', 'erro')
-        return redirect(url_for('index')) # Redireciona para limpar o form
+             flash('Erro nos dados.', 'erro')
+        return redirect(url_for('index'))
 
-    # Buscar dados para os Cards do Dashboard
+    # Estatísticas
     cursor.execute("SELECT COUNT(*) FROM produtos")
-    total_produtos_cadastrados = cursor.fetchone()[0]
-
+    total_produtos = cursor.fetchone()[0]
+    
     cursor.execute("SELECT SUM(quantidade) FROM produtos")
-    result_estoque = cursor.fetchone()[0]
-    total_unidades_estoque = result_estoque if result_estoque else 0
+    result = cursor.fetchone()[0]
+    total_estoque = result if result else 0
 
     cursor.execute("SELECT SUM(valor), COUNT(*) FROM vendas")
-    dados_vendas = cursor.fetchone()
-    total_faturado = dados_vendas[0] if dados_vendas[0] else 0.0
-    total_vendas_qtd = dados_vendas[1] if dados_vendas[1] else 0
+    dados = cursor.fetchone()
+    total_faturado = dados[0] if dados[0] else 0.0
+    total_vendas = dados[1] if dados[1] else 0
 
-    # Buscar histórico recente
     cursor.execute("SELECT id, produto_nome, data_hora, valor FROM vendas ORDER BY id DESC LIMIT 10")
     historico = cursor.fetchall()
     conn.close()
 
-    # Renderiza o template do dashboard enviando todas essas variáveis
     return render_template('dashboard.html', 
-                           total_produtos_cadastrados=total_produtos_cadastrados,
-                           total_unidades_estoque=total_unidades_estoque,
+                           nome_loja=session.get('nome_loja', 'Sistema'), # Envia o nome da loja pro HTML
+                           total_produtos_cadastrados=total_produtos,
+                           total_unidades_estoque=total_estoque,
                            total_faturado=total_faturado,
-                           total_vendas_qtd=total_vendas_qtd,
+                           total_vendas_qtd=total_vendas,
                            historico=historico)
 
-# --- ROTA: ESTOQUE (Lista Completa) ---
+# --- OUTRAS ROTAS ---
 @app.route('/estoque')
 def estoque():
     if not session.get('usuario_logado'): return redirect('/login')
@@ -116,45 +167,35 @@ def estoque():
     cursor.execute("SELECT * FROM produtos ORDER BY id DESC")
     produtos = cursor.fetchall()
     conn.close()
-    return render_template('estoque.html', produtos=produtos)
+    return render_template('estoque.html', produtos=produtos) # nome_loja já está na session
 
-# --- ROTA: CAIXA / PDV (Visual) ---
 @app.route('/caixa')
 def caixa():
     if not session.get('usuario_logado'): return redirect('/login')
     conn = conectar_banco()
     cursor = conn.cursor()
-    # Busca produtos para a lista lateral do caixa
     cursor.execute("SELECT * FROM produtos WHERE quantidade > 0 ORDER BY nome")
     produtos = cursor.fetchall()
     conn.close()
     return render_template('caixa.html', produtos=produtos)
 
-
-# --- ROTAS DE AÇÃO (Vender, Excluir, Relatório) ---
-
-# Rota especial para vender direto da tela de estoque (venda rápida de 1 item)
+# Rotas de Ação (Vender, Excluir, etc...)
 @app.route('/vender_estoque/<int:id_produto>')
 def vender_estoque(id_produto):
     if not session.get('usuario_logado'): return redirect('/login')
-    
     conn = conectar_banco()
     cursor = conn.cursor()
     cursor.execute("SELECT nome, quantidade, preco FROM produtos WHERE id = ?", (id_produto,))
-    produto = cursor.fetchone()
-    
-    if produto:
-        nome, qtd, preco = produto
-        if qtd > 0:
-            agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            cursor.execute("UPDATE produtos SET quantidade = quantidade - 1 WHERE id = ?", (id_produto,))
-            cursor.execute("INSERT INTO vendas (produto_nome, valor, data_hora) VALUES (?, ?, ?)", (nome, preco, agora))
-            conn.commit()
-            flash(f'Venda rápida de "{nome}" (R$ {preco:.2f}) realizada!', 'sucesso')
-        else:
-            flash(f'Erro: "{nome}" está esgotado!', 'erro')
+    prod = cursor.fetchone()
+    if prod and prod[1] > 0:
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("UPDATE produtos SET quantidade = quantidade - 1 WHERE id = ?", (id_produto,))
+        cursor.execute("INSERT INTO vendas (produto_nome, valor, data_hora) VALUES (?, ?, ?)", (prod[0], prod[2], now))
+        conn.commit()
+        flash(f'Venda de {prod[0]} realizada!', 'sucesso')
+    else:
+        flash('Erro: Sem estoque!', 'erro')
     conn.close()
-    # Retorna para a tela de onde veio (estoque)
     return redirect(url_for('estoque'))
 
 @app.route('/excluir/<int:id_produto>')
@@ -165,7 +206,6 @@ def excluir(id_produto):
     cursor.execute("DELETE FROM produtos WHERE id = ?", (id_produto,))
     conn.commit()
     conn.close()
-    flash('Produto excluído do estoque.', 'aviso')
     return redirect(url_for('estoque'))
 
 @app.route('/limpar_caixa')
@@ -173,10 +213,9 @@ def limpar_caixa():
     if not session.get('usuario_logado'): return redirect('/login')
     conn = conectar_banco()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM vendas") 
+    cursor.execute("DELETE FROM vendas")
     conn.commit()
     conn.close()
-    flash('Histórico de vendas do dia foi zerado.', 'aviso')
     return redirect('/')
 
 @app.route('/baixar_relatorio')
@@ -185,24 +224,18 @@ def baixar_relatorio():
     conn = conectar_banco()
     cursor = conn.cursor()
     cursor.execute("SELECT id, data_hora, produto_nome, valor FROM vendas")
-    vendas = cursor.fetchall()
+    rows = cursor.fetchall()
     conn.close()
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(['ID Venda', 'Data e Hora', 'Produto', 'Valor (R$)'])
-    for venda in vendas:
-        writer.writerow(venda)
+    writer.writerow(['ID', 'Data', 'Produto', 'Valor'])
+    for r in rows: writer.writerow(r)
     output.seek(0)
-    return Response(
-        '\ufeff' + output.getvalue(),
-        mimetype="text/csv",
-        headers={"Content-disposition": "attachment; filename=relatorio_vendas_cyber.csv"}
-    )
+    return Response('\ufeff' + output.getvalue(), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=relatorio.csv"})
 
-# --- INICIALIZAÇÃO ---
 if __name__ == '__main__':
     inicializar_banco()
-    # No notebook local, rodamos com debug para ver erros se acontecerem
-    print("--- SISTEMA CYBERPUNK INICIADO ---")
-    print("Acesse no navegador: http://127.0.0.1:5000")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    if getattr(sys, 'frozen', False):
+        app.run(host='0.0.0.0', port=5000, debug=False)
+    else:
+        app.run(host='0.0.0.0', port=5000, debug=True)
