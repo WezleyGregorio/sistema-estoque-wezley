@@ -2,44 +2,44 @@
 
 {% block content %}
 <div class="header">
-    <h1 class="page-title">Visão Geral</h1>
+    <h1 class="page-title">Bem-vindo, {{ session.get('login_atual') }}</h1>
     <button class="btn btn-primary">
-        <i class="ri-refresh-line"></i> Atualizar Dados
+        <i class="ri-refresh-line"></i> Atualizar
     </button>
 </div>
 
 <div class="cards-grid">
-    <div class="card blue">
-        <div class="card-title">Faturamento Total</div>
-        <div class="card-value" style="color: var(--neon-blue);">R$ {{ "%.2f"|format(total_faturado) }}</div>
-    </div>
-    <div class="card purple">
-        <div class="card-title">Vendas Realizadas</div>
-        <div class="card-value" style="color: var(--neon-purple);">{{ total_vendas_qtd }}</div>
-    </div>
-    <div class="card green">
-        <div class="card-title">Total de Produtos</div>
-        <div class="card-value" style="color: var(--neon-green);">{{ total_produtos_cadastrados }}</div>
+    <div class="card">
+        <div class="card-label">Faturamento Hoje</div>
+        <div class="card-value val-blue">R$ {{ "%.2f"|format(total_faturado) }}</div>
     </div>
     <div class="card">
-        <div class="card-title">Unidades em Estoque</div>
+        <div class="card-label">Vendas Realizadas</div>
+        <div class="card-value val-pink">{{ total_vendas_qtd }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Total Produtos</div>
+        <div class="card-value val-green">{{ total_produtos_cadastrados }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Itens em Estoque</div>
         <div class="card-value">{{ total_unidades_estoque }}</div>
     </div>
 </div>
 
 <div class="table-container">
-    <div class="header" style="margin-bottom: 15px;">
-        <h3 style="margin:0;">📜 Últimas Vendas</h3>
+    <div class="table-header-area">
+        <h3 style="margin:0; color:white;">Vendas Recentes</h3>
         <div>
-            <a href="/baixar_relatorio" class="btn" style="border: 1px solid var(--neon-green); color: var(--neon-green); margin-right: 10px;">📥 Baixar Excel</a>
-            <a href="/limpar_caixa" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja ZERAR o caixa de hoje?')">🗑️ Zerar Caixa</a>
+            <a href="/baixar_relatorio" class="btn" style="border: 1px solid #333; color: #ccc;">Baixar Relatório</a>
+            <a href="/limpar_caixa" class="btn btn-danger" onclick="return confirm('Zerar o caixa?')">Zerar Caixa</a>
         </div>
     </div>
     <table>
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Data/Hora</th>
+                <th>Horário</th>
                 <th>Produto</th>
                 <th>Valor</th>
             </tr>
@@ -48,13 +48,15 @@
             {% for venda in historico %}
             <tr>
                 <td>#{{ venda[0] }}</td>
-                <td>{{ venda[2][8:10] }}/{{ venda[2][5:7] }} às {{ venda[2][11:16] }}</td>
-                <td><strong>{{ venda[1] }}</strong></td>
-                <td style="color: var(--neon-green); font-weight: bold;">+ R$ {{ "%.2f"|format(venda[3]) }}</td>
+                <td>{{ venda[2][11:16] }} <small style="color:#666">{{ venda[2][8:10] }}/{{ venda[2][5:7] }}</small></td>
+                <td style="font-weight:500; color:white;">{{ venda[1] }}</td>
+                <td style="color: var(--neon-green);">+ R$ {{ "%.2f"|format(venda[3]) }}</td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="4" style="text-align: center; color: var(--text-secondary);">Nenhuma venda registrada hoje.</td>
+                <td colspan="4" style="text-align: center; padding: 40px; color: #666;">
+                    Nenhuma venda registrada hoje.
+                </td>
             </tr>
             {% endfor %}
         </tbody>

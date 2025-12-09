@@ -1,179 +1,212 @@
-/* --- CONFIGURAÇÕES GERAIS --- */
+/* --- CONFIGURAÇÕES DE LUXO --- */
 :root {
-    --bg-dark: #0a0a0f;
-    --bg-card: #13131a;
-    --text-primary: #ffffff; /* Branco Puro */
-    --text-secondary: #a0a0b0;
-    --neon-blue: #00d2ff;
-    --neon-pink: #ff0055;
-    --neon-green: #00ff88;
-    /* Fonte Elegante igual da Logo */
-    --font-brand: 'Playfair Display', serif;
+    --bg-dark: #09090b; /* Preto quase absoluto */
+    --bg-header: rgba(20, 20, 25, 0.95); /* Fundo do menu levemente transparente */
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --brand-color: #ff0055; /* Rosa da logo */
+    --accent-blue: #00d2ff;
+    --font-brand: 'Playfair Display', serif; /* Fonte da Logo */
+    --font-ui: 'Segoe UI', sans-serif;
 }
 
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+    font-family: var(--font-ui);
     background-color: var(--bg-dark);
     color: var(--text-primary);
     display: flex;
-    flex-direction: column; /* Importante: Layout Vertical (Topo + Conteúdo) */
+    flex-direction: column;
     height: 100vh;
     overflow: hidden;
 }
 
-a { text-decoration: none; }
+a { text-decoration: none; transition: 0.3s; }
 
-/* --- BARRA SUPERIOR (NOVO MENU) --- */
+/* --- BARRA SUPERIOR (HEADER) --- */
 .topbar {
-    background-color: var(--bg-card);
-    height: 85px;
+    background-color: var(--bg-header);
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 40px;
-    border-bottom: 1px solid #1f1f2e;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-    z-index: 100;
+    padding: 0 50px;
+    border-bottom: 1px solid #27272a;
+    backdrop-filter: blur(10px); /* Efeito de vidro */
+    z-index: 1000;
 }
 
-/* Marca / Logo */
+/* 1. Marca (Logo) */
 .brand {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .brand-icon {
-    font-size: 2.5em; 
-    color: var(--text-primary); /* Branco para ficar igual a logo no fundo escuro */
-    line-height: 0;
+    font-size: 2.2em;
+    color: var(--brand-color);
+    filter: drop-shadow(0 0 8px rgba(255, 0, 85, 0.4));
 }
 
-.brand-text {
-    font-family: var(--font-brand); /* Fonte Chique */
-    font-size: 1.8em;
-    color: #ffffff;
-    line-height: 0.9;
+.brand-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.brand-text small {
-    display: block;
-    font-family: 'Segoe UI', sans-serif; /* Fonte manuscrita simulada */
-    font-style: italic;
-    font-size: 0.4em;
-    font-weight: 300;
+.brand-title {
+    font-family: var(--font-brand);
+    font-size: 1.4em;
+    color: white;
+    line-height: 1;
+    letter-spacing: 0.5px;
+}
+
+.brand-subtitle {
+    font-family: var(--font-ui);
+    font-size: 0.5em;
+    text-transform: uppercase;
+    letter-spacing: 3px;
     color: var(--text-secondary);
-    margin-top: 5px;
-    letter-spacing: 1px;
+    margin-top: 4px;
 }
 
-/* Menu Centralizado */
+/* 2. Menu de Navegação (Centro) */
 .nav-menu {
     display: flex;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 5px;
-    border-radius: 50px;
-    border: 1px solid #333;
+    gap: 30px; /* Espaço entre os itens */
 }
 
-.menu-item {
-    padding: 10px 25px;
-    border-radius: 30px;
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: var(--text-secondary);
-    font-weight: 500;
-    transition: 0.3s;
-    display: flex; align-items: center; gap: 8px;
     font-size: 0.95em;
+    font-weight: 500;
+    padding: 8px 0;
+    position: relative;
 }
 
-.menu-item:hover {
-    color: white;
-    background: rgba(255,255,255,0.1);
+.nav-link i { font-size: 1.1em; }
+
+/* Efeito ao passar o mouse: Fica branco */
+.nav-link:hover { color: white; }
+
+/* Item Ativo (Página atual) */
+.nav-link.active {
+    color: var(--accent-blue);
+    font-weight: 600;
 }
 
-.menu-item.active {
-    background: var(--neon-blue);
-    color: #000;
-    font-weight: bold;
-    box-shadow: 0 0 15px rgba(0,210,255,0.4);
+/* Tracinho brilhante embaixo do item ativo */
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-blue);
+    box-shadow: 0 0 10px var(--accent-blue);
+    border-radius: 2px;
 }
 
-/* Área do Usuário */
+/* 3. Área do Usuário (Direita) */
 .user-area {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
 }
-.user-info { text-align: right; font-size: 0.8em; color: #888; }
-.user-info strong { display: block; color: white; font-size: 1.2em; }
+
+.user-badge {
+    text-align: right;
+    line-height: 1.2;
+}
+.user-badge span { display: block; font-size: 0.75em; color: #666; }
+.user-badge strong { font-size: 0.9em; color: white; }
 
 .btn-logout {
-    color: var(--neon-pink);
-    border: 1px solid var(--neon-pink);
-    padding: 8px 15px;
-    border-radius: 10px;
-    transition: 0.3s;
+    color: var(--brand-color);
+    font-size: 1.2em;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.btn-logout:hover { background: var(--neon-pink); color: white; }
+.btn-logout:hover {
+    background: rgba(255, 0, 85, 0.1);
+    transform: scale(1.1);
+}
 
-
-/* --- ÁREA PRINCIPAL --- */
+/* --- ÁREA DE CONTEÚDO --- */
 .main-content {
     flex: 1;
-    padding: 40px;
-    overflow-y: auto; /* Barra de rolagem só no conteúdo */
-    max-width: 1400px;
-    width: 100%;
+    padding: 40px 60px;
+    overflow-y: auto;
+    max-width: 1600px;
     margin: 0 auto;
+    width: 100%;
     box-sizing: border-box;
 }
 
-/* --- CARDS E TABELAS (Mantidos) --- */
+/* --- CARDS (Visão Geral) --- */
 .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-.page-title { font-size: 2em; color: var(--neon-blue); margin: 0; font-family: 'Segoe UI', sans-serif; font-weight: bold; }
+.page-title { font-size: 1.8em; color: white; font-weight: 600; margin: 0; }
 
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; }
-.card { background: linear-gradient(145deg, #1e1e28, #14141a); padding: 25px; border-radius: 15px; border: 1px solid #252530; position: relative; overflow: hidden; }
-.card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
-.card.blue::before { background: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
-.card.purple::before { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
-.card.green::before { background: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
-.card-title { font-size: 0.9em; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
-.card-value { font-size: 2.5em; font-weight: bold; margin: 0;}
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
 
-.table-container { background: var(--bg-card); padding: 20px; border-radius: 15px; border: 1px solid #252530; margin-top: 30px; }
+.card {
+    background: #13131a;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #27272a;
+    transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-3px); border-color: #3f3f46; }
+
+.card-label { font-size: 0.8em; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.card-value { font-size: 2.2em; font-weight: 700; color: white; }
+
+/* Cores dos números */
+.val-blue { color: var(--accent-blue); text-shadow: 0 0 20px rgba(0, 210, 255, 0.2); }
+.val-pink { color: var(--brand-color); text-shadow: 0 0 20px rgba(255, 0, 85, 0.2); }
+.val-green { color: var(--neon-green); text-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
+
+/* --- TABELAS --- */
+.table-container {
+    background: #13131a;
+    padding: 0; /* Remove padding para ficar clean */
+    border-radius: 12px;
+    border: 1px solid #27272a;
+    margin-top: 30px;
+    overflow: hidden;
+}
+.table-header-area { padding: 20px; border-bottom: 1px solid #27272a; display: flex; justify-content: space-between; align-items: center; }
 table { width: 100%; border-collapse: collapse; }
-th { text-align: left; color: var(--text-secondary); padding: 15px; border-bottom: 1px solid #252530; }
-td { padding: 15px; border-bottom: 1px solid #1f1f2e; color: var(--text-primary); vertical-align: middle;}
-.stock-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: bold; }
-.in-stock { background: rgba(0,255,136,0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
-.out-stock { background: rgba(255,0,85,0.1); color: var(--neon-pink); border: 1px solid var(--neon-pink); }
+th { text-align: left; color: #888; padding: 15px 20px; font-size: 0.85em; text-transform: uppercase; border-bottom: 1px solid #27272a; background: #181820; }
+td { padding: 15px 20px; border-bottom: 1px solid #1f1f2e; color: #e0e0e0; font-size: 0.95em; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #1a1a22; }
 
-.btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; color: white;}
-.btn-primary { background: var(--neon-blue); color: #0a0a0f; box-shadow: 0 0 15px rgba(0,210,255,0.2); }
-.btn-primary:hover { box-shadow: 0 0 25px rgba(0,210,255,0.4); }
-.btn-danger { background: rgba(255,0,85,0.1); color: var(--neon-pink); border: 1px solid var(--neon-pink); padding: 8px;}
+/* Botões */
+.btn { padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 0.9em; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+.btn-primary { background: var(--accent-blue); color: black; }
+.btn-primary:hover { filter: brightness(1.2); }
+.btn-danger { background: rgba(255, 0, 85, 0.1); color: var(--brand-color); border: 1px solid var(--brand-color); }
+.btn-danger:hover { background: var(--brand-color); color: white; }
 
-/* Login e Caixa */
-.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0f 100%); }
-.login-box { background: var(--bg-card); padding: 40px; border-radius: 20px; text-align: center; width: 100%; max-width: 400px; border: 1px solid var(--neon-blue); box-shadow: 0 0 30px rgba(0,210,255,0.15); }
-.form-control { width: 100%; padding: 12px; margin: 10px 0; background: #0f0f13; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
-.form-control:focus { outline: none; border-color: var(--neon-blue); }
+/* Login e Inputs */
+.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; background: #050505; }
+.login-box { width: 350px; text-align: center; }
+.form-control { width: 100%; padding: 12px 15px; margin: 8px 0; background: #18181b; border: 1px solid #27272a; color: white; border-radius: 8px; box-sizing: border-box; font-size: 1em; }
+.form-control:focus { border-color: var(--accent-blue); outline: none; }
 
-.pos-container { display: flex; gap: 20px; height: calc(100vh - 150px); }
+/* POS (Caixa) */
+.pos-container { display: flex; gap: 30px; height: calc(100vh - 160px); }
 .pos-left { flex: 2; display: flex; flex-direction: column; gap: 20px; }
 .pos-right { flex: 1; }
-.product-search-box { background: var(--bg-card); padding: 20px; border-radius: 15px; }
-.cart-box { background: var(--bg-card); padding: 25px; border-radius: 15px; border: 1px solid #252530; height: 100%; display: flex; flex-direction: column; }
-.cart-total { font-size: 2.5em; color: var(--neon-green); font-weight: bold; margin: 20px 0; text-align: right;}
-.payment-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-.payment-radio-label { display: flex; justify-content: space-between; align-items: center; background: #1a1a20; padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid #333; }
-input[type="radio"]:checked + .payment-radio-label { background: rgba(0,210,255,0.1); border-color: var(--neon-blue); color: var(--neon-blue); }
-
-.flash-messages { margin-bottom: 20px; }
-.flash-msg { padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 10px; }
-.flash-sucesso { background: rgba(0,255,136,0.2); color: var(--neon-green); border: 1px solid var(--neon-green); }
-.flash-erro { background: rgba(255,0,85,0.2); color: var(--neon-pink); border: 1px solid var(--neon-pink); }
+.cart-box { background: #13131a; border: 1px solid #27272a; border-radius: 12px; height: 100%; display: flex; flex-direction: column; padding: 20px; }

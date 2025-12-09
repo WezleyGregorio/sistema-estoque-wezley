@@ -6,43 +6,41 @@
     <title>Sistema La Persona</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header class="topbar">
         
         <div class="brand">
-            <div class="brand-icon">👠</div> 
-            
-            <div class="brand-text">
-                {{ session.get('nome_loja', 'La Persona').split(' ')[0] }}
-                {{ session.get('nome_loja', 'La Persona').split(' ')[1] if ' ' in session.get('nome_loja', '') else '' }}
-                <small>PER GUTO</small>
+            <i class="ri-run-line brand-icon"></i> <div class="brand-info">
+                <span class="brand-title">
+                    {{ session.get('nome_loja', 'La Persona').split(' ')[0] }} 
+                    {{ session.get('nome_loja', 'La Persona').split(' ')[1] if ' ' in session.get('nome_loja', '') else '' }}
+                </span>
+                <span class="brand-subtitle">PER GUTO</span>
             </div>
         </div>
 
         <nav class="nav-menu">
-            <a href="/" class="menu-item {% if request.path == '/' %}active{% endif %}">
-                <i class="ri-dashboard-line"></i> Dashboard
+            <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                <i class="ri-layout-grid-line"></i> Visão Geral
             </a>
-            <a href="/caixa" class="menu-item {% if 'caixa' in request.path %}active{% endif %}">
-                <i class="ri-money-dollar-circle-line"></i> Caixa
+            <a href="/caixa" class="nav-link {% if 'caixa' in request.path %}active{% endif %}">
+                <i class="ri-shopping-cart-2-line"></i> PDV / Caixa
             </a>
-            <a href="/estoque" class="menu-item {% if 'estoque' in request.path %}active{% endif %}">
-                <i class="ri-box-3-line"></i> Estoque
+            <a href="/estoque" class="nav-link {% if 'estoque' in request.path %}active{% endif %}">
+                <i class="ri-archive-line"></i> Estoque
             </a>
         </nav>
 
         <div class="user-area">
-            <div class="user-info">
-                Usuário<br>
+            <div class="user-badge">
+                <span>Logado como</span>
                 <strong>{{ session.get('login_atual', 'Visitante') }}</strong>
             </div>
-            <a href="/logout" class="btn-logout" title="Sair">
-                <i class="ri-logout-box-r-line"></i>
+            <a href="/logout" class="btn-logout" title="Sair do Sistema">
+                <i class="ri-logout-circle-line"></i>
             </a>
         </div>
     </header>
